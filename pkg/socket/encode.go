@@ -10,6 +10,10 @@ import (
 
 var _magicKey string = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"
 
+func randomByte() byte {
+	return byte(rand.Intn(255))
+}
+
 func createAcceptKey(key string) string {
 	hasher := sha1.New()
 	hasher.Write([]byte(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"))

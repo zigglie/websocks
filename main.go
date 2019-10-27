@@ -4,8 +4,9 @@ import (
 	"crypto/tls"
 	"fmt"
 	"os"
-	"skha/socket/pkg/socket"
 	"time"
+
+	"github.com/Zigglie/websocks/pkg/socket"
 )
 
 func exitError(e error) {
