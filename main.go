@@ -75,7 +75,7 @@ func goSendBytes(t string, s *socket.Socket) {
 }
 
 func main() {
-	s, err := socket.NewSocket("wss://echo.websocket.org")
+	s, err := socket.NewSocket("ws://demos.kaazing.com/echo")
 
 	if err != nil {
 		exitError(err)
