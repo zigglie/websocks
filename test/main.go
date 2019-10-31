@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/Zigglie/websocks/pkg/socket"
+	socket "github.com/Zigglie/websocks"
 )
 
 func exitError(e error) {
