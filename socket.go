@@ -41,15 +41,12 @@ func (s *Socket) dial() error {
 }
 
 // NewSocket creates a connection to addr
-func NewSocket(addr string) (*Socket, error) {
-	s := &Socket{}
+func (s *Socket) Init(addr string) error {
 	s.Address, s.secure = createWSURI(addr)
 	s.Endpoint = getEndpoint(addr)
 
 	err := s.dial()
-
-	//s.conn.Handshake()
-	return s, err
+	return err
 }
 
 func (s *Socket) getHost() string {
@@ -64,9 +61,9 @@ func (s *Socket) GetConn() net.Conn {
 func (s *Socket) upgrade() {
 	payload := "GET /" + s.Endpoint + " HTTP/1.1\r\n" +
 		"Host: " + s.getHost() + "\r\n" +
+		"Connection: Upgrade\r\n" +
 		"Accept: */*\r\n" +
-		"Upgrade: websocket\r\n" +
-		"Connection: keep-alive, Upgrade\r\n" +
+		"upgrade: websocket\r\n" +
 		"Sec-WebSocket-Key: " + getHeaderKey() + "\r\n" +
 		"Sec-WebSocket-Version: 13\r\n"
 

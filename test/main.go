@@ -74,8 +74,14 @@ func goSendBytes(t string, s *socket.Socket) {
 	}
 }
 
+var _discord string = "wss://gateway.discord.gg/?v=6&encoding=json"
+var _test string = "ws://localhost/"
+var _echo string = "wss://echo.websocket.org"
+
 func main() {
-	s, err := socket.NewSocket("ws://demos.kaazing.com/echo")
+	s := &socket.Socket{}
+
+	err := s.Init(_test)
 
 	if err != nil {
 		exitError(err)
@@ -84,7 +90,7 @@ func main() {
 	c := make(chan []byte)
 	go goReadBytes(c, s)
 
-	go goSendBytes("Bytes", s)
+	// go goSendBytes("Bytes", s)
 
 	for {
 		tmp := <-c

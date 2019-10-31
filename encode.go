@@ -16,7 +16,7 @@ func randomByte() byte {
 
 func createAcceptKey(key string) string {
 	hasher := sha1.New()
-	hasher.Write([]byte(key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11"))
+	hasher.Write([]byte(key + _magicKey))
 	return base64.URLEncoding.EncodeToString(hasher.Sum(nil))
 }
 
@@ -25,6 +25,8 @@ func getSocketKey(b *[]byte) string {
 	return reg.FindString(string(*b))
 }
 
+// maskMessage performs necessary client payload masking
+// as required by RFC6455. https://tools.ietf.org/html/rfc6455#section-4.1
 func maskMessage(msg string, mask []byte) []byte {
 	encPayload := []byte{}
 

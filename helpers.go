@@ -16,10 +16,15 @@ func getHeaderKey() string {
 
 func getPort(addr string) (string, bool) {
 	splits := strings.Split(addr, ":")
-	if splits[0] == "ws" {
-		return "80", false
+
+	if len(splits) > 2 {
+		return "", false
 	}
-	return "443", true
+
+	if splits[0] == "ws" {
+		return ":80", false
+	}
+	return ":443", true
 }
 
 func getEndpoint(addr string) string {
@@ -46,5 +51,5 @@ func createWSURI(addr string) (string, bool) {
 	splits := strings.Split(addr, "/")
 	fmt.Println(getEndpoint(addr))
 
-	return splits[2] + ":" + port, secure
+	return splits[2] + port, secure
 }
