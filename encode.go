@@ -70,9 +70,8 @@ func createLengthBytes(msg *string, b *[]byte) {
 	} else if length > 0xFFFF {
 		*b = append(*b, 127)
 	} else {
-
+		*b = append(*b, byte(length|0x80))
 	}
-
 }
 
 func CreatePayload(msg string) []byte {
@@ -85,7 +84,7 @@ func CreatePayload(msg string) []byte {
 	mask := createMask()
 
 	payload = append(payload, mask...)
-
 	payload = append(payload, maskMessage(msg, mask)...)
+
 	return payload
 }
