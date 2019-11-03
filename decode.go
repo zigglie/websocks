@@ -51,14 +51,25 @@ func getOpCode(b byte) int {
 // "Application data".  The length of the "Extension data" may be
 // zero, in which case the payload length is the length of the
 // "Application data".
-func getLength(b *[]byte) uint {
-	length := uint((*b)[1])
+func getLength(b *[]byte) uint64 {
+	length := uint64((*b)[1])
 	if length == 127 {
-		return uint(length)
+		length = 0
+
+		length = (uint64((*b)[2]) | length) << 8
+		length = (uint64((*b)[3]) | length) << 8
+		length = (uint64((*b)[4]) | length) << 8
+		length = (uint64((*b)[5]) | length) << 8
+		length = (uint64((*b)[6]) | length) << 8
+		length = (uint64((*b)[7]) | length) << 8
+		length = (uint64((*b)[8]) | length) << 8
+		length = (uint64((*b)[9]) | length)
+
+		return length
 	} else if length == 126 {
 		// Get next two bytes
-		length = uint((*b)[2]) << 8
-		length = length | uint((*b)[3])
+		length = uint64((*b)[2]) << 8
+		length = length | uint64((*b)[3])
 		return length
 	}
 	return length
@@ -83,36 +94,16 @@ func DecodePacket(b *[]byte) (p Packet) {
 		p.Msg = string(p.Bytes)
 
 	} else {
-		p.Length = uint64((*b)[1])
+		p.Length = getLength(b)
 		push := 2
 
 		// Handle differing lengths
 		// need to push back payload read point
 		if p.Length == 126 {
 			// next 2 bytes as unsigned 16bit int as payload length
-			length := uint64(0)
-
-			length = (uint64((*b)[2]) | length) << 8
-			length = (uint64((*b)[3]) | length) << 8
-
-			p.Length = length
 			push = 4
-
 		} else if p.Length == 127 {
-			// next 8 bytes as unsinged 64bit int as payload length
-			length := uint64(0)
-
-			length = (uint64((*b)[2]) | length) << 8
-			length = (uint64((*b)[3]) | length) << 8
-			length = (uint64((*b)[4]) | length) << 8
-			length = (uint64((*b)[5]) | length) << 8
-			length = (uint64((*b)[6]) | length) << 8
-			length = (uint64((*b)[7]) | length) << 8
-			length = (uint64((*b)[8]) | length) << 8
-			length = (uint64((*b)[9]) | length)
-
 			push = 10
-
 		}
 
 		i := 0
