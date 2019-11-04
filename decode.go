@@ -115,6 +115,10 @@ func DecodePacket(b *[]byte) (p Packet) {
 			}
 		}
 
+		if push > i {
+			push = i
+		}
+
 		p.Bytes = (*b)[:i]
 		p.Msg = string(p.Bytes[push:])
 	}
