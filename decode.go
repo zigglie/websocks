@@ -95,14 +95,15 @@ func DecodePacket(b *[]byte) (p Packet) {
 
 	} else {
 		p.Length = getLength(b)
+
 		push := 2
 
 		// Handle differing lengths
 		// need to push back payload read point
-		if p.Length == 126 {
+		if (*b)[1] == 126 {
 			// next 2 bytes as unsigned 16bit int as payload length
 			push = 4
-		} else if p.Length == 127 {
+		} else if (*b)[1] == 127 {
 			push = 10
 		}
 
